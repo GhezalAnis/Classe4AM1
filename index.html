@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4AM1 مدونة القسم</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- خلفية الصفحة -->
+    <div class="background-image"></div>
+
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <h1 class="main-title">4AM1 مدونة القسم</h1>
+        <button class="login-btn" onclick="openModal()">تسجيل الدخول</button>
+    </nav>
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar">
+        <ul>
+            <li><a href="#">🏠 الرئيسية</a></li>
+            <li><a href="#">👤 الملف الشخصي</a></li>
+            <li><a href="#">📚 المواد الدراسية</a></li>
+        </ul>
+    </aside>
+
+    <!-- نافذة تسجيل الدخول -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>تسجيل الدخول</h2>
+            <p>اختر طريقة تسجيل الدخول</p>
+            <button class="login-btn">تسجيل الدخول عبر Google</button>
+            <button class="login-btn">تسجيل الدخول بالبريد الإلكتروني</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
