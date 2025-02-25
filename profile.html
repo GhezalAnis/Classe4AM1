@@ -3,21 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ملفك الشخصي</title>
-    <link rel="stylesheet" href="style.css">
+    <title>الملف الشخصي</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        img { border-radius: 50%; width: 100px; height: 100px; }
+        .container { margin-top: 50px; }
+        .logout-btn { background-color: red; color: white; padding: 10px; border: none; cursor: pointer; }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>📘 ملفك الشخصي</h1>
-        <a href="index.html" class="back-btn">⬅ العودة</a>
-    </header>
-
-    <main>
+    <div class="container">
+        <h1>📱 ملفك الشخصي</h1>
+        <a href="index.html">← العودة</a>
         <h2>معلومات المستخدم</h2>
-        <p>الاسم: سمير ناجي</p>
-        <p>البريد الإلكتروني: example@email.com</p>
-    </main>
+        <img id="userPhoto" src="" alt="صورة المستخدم">
+        <p><strong>الاسم:</strong> <span id="userName">جارِ التحميل...</span></p>
+        <p><strong>البريد الإلكتروني:</strong> <span id="userEmail">جارِ التحميل...</span></p>
+        <button id="logoutBtn" class="logout-btn">تسجيل الخروج</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = JSON.parse(localStorage.getItem("user"));
+
+            if (user) {
+                document.getElementById("userName").textContent = user.displayName;
+                document.getElementById("userEmail").textContent = user.email;
+                document.getElementById("userPhoto").src = user.photoURL || "default-avatar.png";
+            } else {
+                window.location.href = "index.html"; // إعادة التوجيه إذا لم يكن المستخدم مسجلًا
+            }
+
+            // تسجيل الخروج
+            document.getElementById("logoutBtn").addEventListener("click", () => {
+                localStorage.removeItem("user");
+                window.location.href = "index.html";
+            });
+        });
+    </script>
 
 </body>
 </html>
