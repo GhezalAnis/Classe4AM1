@@ -1,70 +1,49 @@
-// استيراد الوظائف من Firebase
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
+// استيراد وظائف Firebase Authentication
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
 
-// تكوين Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyDZvXy3zahfDtxDzmsS3o7ZHC1Qi7p0Jyk",
-    authDomain: "am1-7039d.firebaseapp.com",
-    projectId: "am1-7039d",
-    storageBucket: "am1-7039d.firebasestorage.app",
-    messagingSenderId: "461785502349",
-    appId: "1:461785502349:web:4877d7ca241072588dc8c4",
-    measurementId: "G-VL7PTE3XSP"
-};
-
-// تهيئة Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// تهيئة Firebase Auth
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
 
 // تسجيل الدخول باستخدام Google
-function loginWithGoogle() {
+document.getElementById("googleLogin").addEventListener("click", () => {
     signInWithPopup(auth, provider)
         .then((result) => {
-            const user = result.user;
-            localStorage.setItem("user", JSON.stringify(user)); // حفظ بيانات المستخدم
-            window.location.href = "profile.html"; // الانتقال إلى الصفحة الشخصية
+            console.log("✅ تسجيل الدخول ناجح:", result.user);
+            window.location.href = "profile.html"; // توجيه المستخدم إلى ملفه الشخصي بعد تسجيل الدخول
         })
         .catch((error) => {
-            console.error("خطأ أثناء تسجيل الدخول:", error);
+            console.error("❌ خطأ في تسجيل الدخول:", error);
         });
-}
+});
 
-// تسجيل الخروج
-function logout() {
-    signOut(auth).then(() => {
-        localStorage.removeItem("user"); // حذف بيانات المستخدم
-        window.location.href = "index.html"; // الرجوع إلى الصفحة الرئيسية
-    }).catch((error) => {
-        console.error("خطأ أثناء تسجيل الخروج:", error);
-    });
-}
-
-// التحقق من حالة تسجيل الدخول عند تحميل الصفحة
-document.addEventListener("DOMContentLoaded", () => {
-    const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (loginBtn) {
-        loginBtn.addEventListener("click", loginWithGoogle);
-    }
-
-    if (logoutBtn) {
-        logoutBtn.addEventListener("click", logout);
-    }
-
-    // تحديث واجهة المستخدم في `profile.html`
-    if (window.location.pathname.includes("profile.html")) {
-        if (user) {
-            document.getElementById("userName").textContent = user.displayName;
+// متابعة حالة المستخدم وعرض بياناته
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // عرض بيانات المستخدم في صفحة الملف الشخصي
+        if (window.location.pathname.includes("profile.html")) {
+            document.getElementById("userName").textContent = user.displayName || "مستخدم مجهول";
             document.getElementById("userEmail").textContent = user.email;
-            document.getElementById("userPhoto").src = user.photoURL;
-        } else {
-            window.location.href = "index.html"; // إعادة التوجيه إذا لم يكن هناك مستخدم
+            document.getElementById("userImage").src = user.photoURL || "default-avatar.png";
+        }
+    } else {
+        // إذا لم يكن المستخدم مسجلاً الدخول، إعادة التوجيه إلى الصفحة الرئيسية
+        if (window.location.pathname.includes("profile.html")) {
+            window.location.href = "index.html";
         }
     }
 });
+
+// تسجيل الخروج
+if (window.location.pathname.includes("profile.html")) {
+    document.getElementById("logoutButton").addEventListener("click", () => {
+        signOut(auth)
+            .then(() => {
+                console.log("🚪 تم تسجيل الخروج بنجاح!");
+                window.location.href = "index.html"; // توجيه المستخدم إلى الصفحة الرئيسية بعد تسجيل الخروج
+            })
+            .catch((error) => {
+                console.error("❌ خطأ أثناء تسجيل الخروج:", error);
+            });
+    });
+}
